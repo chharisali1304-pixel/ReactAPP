@@ -9,7 +9,7 @@ function Card({
       <h2>{name}</h2>
 
       <p>
-        <strong>Age123:</strong> {age ?? "Not available"}
+        <strong>Age:</strong> {age ?? "Not available"}
       </p>
           
       <p>
