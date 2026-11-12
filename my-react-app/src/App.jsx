@@ -5,6 +5,7 @@ import viteLogo from './assets/vite.svg'
 import Card from "./components/card";
 import { useLayoutEffect ,useRef} from "react";
 import { products, ProductCard } from "./components/product";
+import { Counter } from "./components/counter";
 import "./App.css";
 
              
@@ -54,6 +55,27 @@ import "./App.css";
   useLayoutEffect(() => {
     console.log("COMMIT:", selectedRef.current?.textContent);
   }, [selectedId, sortOrder, search, category]);
+
+
+
+   const [count, setCount] = useState(0);
+
+  function handleClick() {
+    console.log("Before:", count);
+
+    setCount(count + 1);
+
+    console.log("After:", count);
+
+
+  }
+   function handleReset() {
+    setCount(0);
+  }
+
+
+
+
 
    return (
     <div className="container">
@@ -181,6 +203,18 @@ import "./App.css";
         )}
       </div>
     </div>
+
+
+
+
+    
+  <div>
+      <h2>Count: {count}</h2>
+      <button onClick={handleClick}>Increase</button>
+      <button onClick={handleReset}>Reset</button>
+    </div>
+
+    <Counter />
     </div>
   );
 }
@@ -189,21 +223,3 @@ export default App;
 
 
 
-export function Counter() {
-  const [count, setCount] = useState(0);
-
-  function handleClick() {
-    console.log("Before:", count);
-
-    setCount(count + 1);
-
-    console.log("After:", count);
-  }
-
-  return (
-    <div>
-      <h2>Count: {count}</h2>
-      <button onClick={handleClick}>Increase</button>
-    </div>
-  );
-}
