@@ -56,10 +56,9 @@ import "./App.css";
     console.log("COMMIT:", selectedRef.current?.textContent);
   }, [selectedId, sortOrder, search, category]);
 
-
-
+// Counter State
    const [count, setCount] = useState(0);
-
+// Function to handle the click event and increase the count
   function handleClick() {
     console.log("Before:", count);
 
@@ -69,6 +68,7 @@ import "./App.css";
 
 
   }
+  // Reset function to reset the count to 0
    function handleReset() {
     setCount(0);
   }
@@ -80,7 +80,7 @@ import "./App.css";
    return (
     <div className="container">
       <h1>Team Profiles</h1>
-
+ { /*Card Component Usage*/}
       <div className="card-container">
 
         <Card name="Ali" age={22} role="Frontend Developer">
@@ -107,7 +107,7 @@ import "./App.css";
   
 
   
-    
+    { /*Product List Section*/}
       <div className="container">
       <h1>Product List</h1>
 
@@ -207,12 +207,14 @@ import "./App.css";
 
 
 
-    
+  { /*Counter Component Usage*/}
   <div>
       <h2>Count: {count}</h2>
       <button onClick={handleClick}>Increase</button>
       <button onClick={handleReset}>Reset</button>
     </div>
+
+
 
     <Counter />
     </div>
