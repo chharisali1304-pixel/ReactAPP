@@ -3,53 +3,57 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import Card from "./components/card";
+import { useLayoutEffect ,useRef} from "react";
+import { products, ProductCard } from "./components/product";
 import "./App.css";
 
-
-const products = [
-  { id: 1, name: "Laptop", price: 85000, category: "Electronics" },
-  { id: 2, name: "Shoes", price: 5000, category: "Fashion" },
-  { id: 3, name: "Mobile", price: 45000, category: "Electronics" },
-  { id: 4, name: "T-Shirt", price: 2000, category: "Fashion" },
-  { id: 5, name: "Headphones", price: 8000, category: "Electronics" },
-];
-
-
-
-// Child component
-function ProductCard({ product, onSelect }) {
-  return (
-    <div>
-      <h3>{product.name}</h3>
-      <p>Price: ${product.price}</p>
-      
-      <button onClick={() => onSelect(product)}>
-        Select Product
-      </button>
-    </div>
-  );
-}                
+             
  function App() {
 
+   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sortOrder, setSortOrder] = useState("low");
+  const [selectedId, setSelectedId] = useState(null);
 
-  const filteredProducts = products
-    .filter((product) =>
-      category === "All" || product.category === category
-    )
-    .sort((a, b) =>
-      sortOrder === "low"
-        ? a.price - b.price
-        : b.price - a.price
-    );
+  const selectedRef = useRef(null);
 
-  const [selectedProduct, setSelectedProduct] =
-    useState(null);
+  console.log("RENDER: App");
 
-  function handleSelectProduct(product) {
-    setSelectedProduct(product);
+  // 1. Filter by search and category
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(search.trim().toLowerCase());
+
+    const matchesCategory =
+      category === "All" || product.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  // 2. Sort without modifying original products
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOrder === "low") return a.price - b.price;
+    if (sortOrder === "high") return b.price - a.price;
+
+    return a.name.localeCompare(b.name);
+  });
+
+  // 3. Find selected product using stable ID
+  const selectedProduct = products.find(
+    (product) => product.id === selectedId
+  );
+
+  // 4. Handle selection from child component
+  function handleSelect(product) {
+    console.log("CLICK:", product.name);
+    setSelectedId(product.id);
   }
+
+  // 5. Observe DOM after React commits
+  useLayoutEffect(() => {
+    console.log("COMMIT:", selectedRef.current?.textContent);
+  }, [selectedId, sortOrder, search, category]);
 
    return (
     <div className="container">
@@ -82,43 +86,100 @@ function ProductCard({ product, onSelect }) {
 
   
     
-<div className="container">
-  <h1>Product List</h1>
+      <div className="container">
+      <h1>Product List</h1>
 
-  <div className="toolbar">
-    <select
-      value={category}
-      onChange={(e) => setCategory(e.target.value)}
-    >
-      <option value="All">All Products</option>
-      <option value="Electronics">Electronics</option>
-      <option value="Fashion">Fashion</option>
-    </select>
+      {/* Search and Filters */}
+      <div className="filter-panel">
 
-    <select
-      value={sortOrder}
-      onChange={(e) => setSortOrder(e.target.value)}
-    >
-      <option value="low">Price: Low to High</option>
-      <option value="high">Price: High to Low</option>
-    </select>
-  </div>
+        <input
+          type="search"
+          placeholder="Search products..."
+          aria-label="Search products"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-  <div className="product-grid">
-    {filteredProducts.map((product) => (
-      <div className="product-card" key={product.id}>
-        <h2>{product.name}</h2>
-        <p>Rs. {product.price.toLocaleString("en-PK")}</p>
-        <span>{product.category}</span>
- <br></br>
-        <button onClick={() => handleSelectProduct(product)}>
-         Select Product
-        </button>
+        <div className="filter-row">
+
+          <div className="filter-group">
+            <label htmlFor="category">Category</label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="All">All products</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Fashion">Fashion</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label htmlFor="sort">Sort by</label>
+            <select
+              id="sort"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="low">Price: Low to high</option>
+              <option value="high">Price: High to low</option>
+              <option value="name">Name: A to Z</option>
+            </select>
+          </div>
+
+        </div>
       </div>
-    ))}
-  </div>
-</div>
 
+      <p className="results-count">
+        {sortedProducts.length} products found
+      </p>
+
+      {/* Products or Empty State */}
+      {sortedProducts.length === 0 ? (
+        <div className="empty-state">
+          <h2>No products found</h2>
+          <p>Try another search or category.</p>
+
+          <button
+            onClick={() => {
+              setSearch("");
+              setCategory("All");
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
+      ) : (
+        <div className="product-grid">
+          {sortedProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onSelect={handleSelect}
+              isSelected={selectedId === product.id}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Selected Product */}
+      <div className="selected-panel" ref={selectedRef}>
+        <h2>Selected Product</h2>
+
+        {selectedProduct ? (
+          <>
+            <p>Name: {selectedProduct.name}</p>
+            <p>
+              Price: Rs.{" "}
+              {selectedProduct.price.toLocaleString("en-PK")}
+            </p>
+          </>
+        ) : (
+          <p>No product selected</p>
+        )}
+      </div>
+    </div>
     </div>
   );
 }
