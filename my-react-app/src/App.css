@@ -155,6 +155,7 @@ body {
   background: #1e293b;
   border: 1px solid #334155;
   border-radius: 16px;
+  
   overflow: hidden;
   text-align: center;
   transition: transform 0.2s, border-color 0.2s;

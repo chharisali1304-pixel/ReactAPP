@@ -13,7 +13,7 @@ function ProductCard({ product, onSelect, isSelected }) {
     <div className="product-card">
       <h2>{product.name}</h2>
       <p>Rs. {product.price.toLocaleString("en-PK")}</p>
-      <span>{product.category}</span>
+      <span>{product.category}</span><br />
 
       <button
         onClick={() => {

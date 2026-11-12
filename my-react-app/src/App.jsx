@@ -162,9 +162,10 @@ import "./App.css";
           ))}
         </div>
       )}
-
-      {/* Selected Product */}
-      <div className="selected-panel" ref={selectedRef}>
+        
+      {/* Selected Product */} 
+      
+      <div className="selected-panel" ref={selectedRef}>  
         <h2>Selected Product</h2>
 
         {selectedProduct ? (
@@ -185,3 +186,24 @@ import "./App.css";
 }
 
 export default App;
+
+
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    console.log("Before:", count);
+
+    setCount(count + 1);
+
+    console.log("After:", count);
+  }
+
+  return (
+    <div>
+      <h2>Count: {count}</h2>
+      <button onClick={handleClick}>Increase</button>
+    </div>
+  );
+}
