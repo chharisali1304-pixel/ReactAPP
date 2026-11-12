@@ -14,7 +14,22 @@ const products = [
   { id: 5, name: "Headphones", price: 8000, category: "Electronics" },
 ];
 
-function App() {
+
+
+// Child component
+function ProductCard({ product, onSelect }) {
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <p>Price: ${product.price}</p>
+      
+      <button onClick={() => onSelect(product)}>
+        Select Product
+      </button>
+    </div>
+  );
+}                
+ function App() {
 
   const [category, setCategory] = useState("All");
   const [sortOrder, setSortOrder] = useState("low");
@@ -28,7 +43,15 @@ function App() {
         ? a.price - b.price
         : b.price - a.price
     );
-  return (
+
+  const [selectedProduct, setSelectedProduct] =
+    useState(null);
+
+  function handleSelectProduct(product) {
+    setSelectedProduct(product);
+  }
+
+   return (
     <div className="container">
       <h1>Team Profiles</h1>
 
@@ -59,36 +82,43 @@ function App() {
 
   
     
-      <h1>Product List</h1>
+<div className="container">
+  <h1>Product List</h1>
 
-      <div className="controls">
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="All">All Products</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Fashion">Fashion</option>
-        </select>
+  <div className="toolbar">
+    <select
+      value={category}
+      onChange={(e) => setCategory(e.target.value)}
+    >
+      <option value="All">All Products</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Fashion">Fashion</option>
+    </select>
 
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="low">Price: Low to High</option>
-          <option value="high">Price: High to Low</option>
-        </select>
+    <select
+      value={sortOrder}
+      onChange={(e) => setSortOrder(e.target.value)}
+    >
+      <option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option>
+    </select>
+  </div>
+
+  <div className="product-grid">
+    {filteredProducts.map((product) => (
+      <div className="product-card" key={product.id}>
+        <h2>{product.name}</h2>
+        <p>Rs. {product.price.toLocaleString("en-PK")}</p>
+        <span>{product.category}</span>
+ <br></br>
+        <button onClick={() => handleSelectProduct(product)}>
+         Select Product
+        </button>
       </div>
+    ))}
+  </div>
+</div>
 
-      <div className="product-grid">
-        {filteredProducts.map((product) => (
-          <div className="product-card" key={product.id}>
-            <h2>{product.name}</h2>
-            <p>Rs. {product.price.toLocaleString()}</p>
-            <p>{product.category}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
