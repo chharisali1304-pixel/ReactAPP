@@ -13,7 +13,9 @@ import {
   products as initialProducts,
   ProductCard
 } from "./components/product";
-import FormComparison from "./components/FormComparison";
+import ControlledForm from "./components/ControlledForm";
+import FormDataForm from "./components/FormDataForm";
+import TaskForm from "./components/TaskForm";
 import "./App.css";
 
 export default function App() {
@@ -403,7 +405,13 @@ export default function App() {
           Reset Counter
         </button>
       </section>
-
+       <section className="forms-section">
+  <ControlledForm />
+  <FormDataForm />
+</section>
+<section>
+  <TaskForm />
+</section>
     </div>
   );
 }
