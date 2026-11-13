@@ -1,7 +1,7 @@
 function Card({
-  name = "Unknown User",
+  name = "",
   age,
-  role = "Not specified",
+  role = "",
   children
 }) {
   return (
