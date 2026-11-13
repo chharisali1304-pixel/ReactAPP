@@ -1,9 +1,9 @@
 
 import { useState } from "react";
 
-// ======================================
+
 // 1. CONTROLLED FORM
-// ======================================
+
 function ControlledForm({ onSave }) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
