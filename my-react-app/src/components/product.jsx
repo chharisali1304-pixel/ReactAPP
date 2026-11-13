@@ -7,7 +7,7 @@ const products = [
   { id: 5, name: "T-Shirt", price: 2000, category: "Fashion" }
 ];
 // ProductCard Component
-function ProductCard({ product, onSelect, isSelected }) {
+function ProductCard({ product, onSelect, isSelected, onUpdatePrice, onDelete }) {
   console.log("RENDER ProductCard:", product.name);
 
   return (
